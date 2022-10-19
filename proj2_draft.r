@@ -30,6 +30,11 @@
 ## Output: True if the prisoners finds his number for the given inputs, False
 ## otherwise.
 
+## We will use the Sys.time() command to measure the runtime of the entire code
+
+start_time <- Sys.time()
+
+
 
 Psub<-function(n,k,strategy,cardseq){
   succeed=FALSE ## Assume the prisoner fails
@@ -134,9 +139,133 @@ Pall<-function(n,nreps=10000,...){
     
     
   }
-  success/nreps.nreps ### Output:the probability of success
+  success/nreps ## Output:the probability of success
   
   
 }
 
 ## ----------------------------------------------------------------------------
+
+
+## Demonstration
+
+## For an individual prisoner
+## The probability of success is the same for every prisoner (under any 
+## strategy), so without loss of generality we demonstrate for prisoner 1
+
+
+## Probability of success for prisoner 1, for n=5, under strategy=1,2,3
+
+
+for(i in 1:3){
+   
+      r_ind5<-c(r_ind5,Pone(n=5,k=1,strategy=i))
+
+}
+
+## Probability of success for prisoner 1, for n=50, under strategy=1,2,3
+
+
+r_ind50=c()
+
+for(i in 1:3){
+   
+      r_ind50<-c(r_ind50,(Pone(n=50,k=1,strategy=i)))
+
+}
+
+## For all prisoners
+## Probability of success for all prisoners simultaneously, under 
+## strategy=1,2,3
+
+r_all5=c()
+
+for(i in 1:3){
+   
+      r_all5<-append(r_all5,(Pall(n=5,strategy=i)))
+
+}
+
+
+r_all50=c()
+
+for(i in 1:3){
+   
+      r_all50=append(r_all50,(Pall(n=50,strategy=i)))
+
+}
+
+
+## ----------------------------------------------------------------------------
+
+
+dloop<-function(n,nreps){
+  
+  
+  
+  v<-rep(0,2*n) ## empty vector 
+  
+  for (i in 1:nreps){
+    cardseq<-c() 
+    cardseq<- sample(seq(1,2*n),2*n) ### Randomly allocate card no. to boxes
+    v.sim<-rep(0,2*n)
+    
+    opencard.seq<-rep(0,times=2*n) ### assume all card are not opened
+    for (k in 1:(2*n)){
+      if(opencard.seq[k]==0){  ### Only test cards that are NOT opened
+        ## Cards opened will have the same loop length
+        ## with one of the previous cards
+        loop.len<-1
+        opencard<-cardseq[k] ### The first card to be opened
+        
+        while (opencard!=k){
+          ## Update the card opened by using the previous card number to find
+          ## the corresponding box number
+          opencard<-cardseq[opencard]
+          
+          ## Record which card has been opened
+          opencard.seq[opencard]<-1
+          
+          loop.len<-loop.len+1 ## Increase the loop by 1
+        }
+        v.sim[loop.len]<-1
+      } 
+    }
+    
+    
+    
+    ## Enter the loop length in the ith element of the vector
+    
+    v<-v+v.sim
+    
+  }
+  
+  
+  v/nreps
+}
+
+## ----------------------------------------------------------------------------
+
+## Calculating the probability that there does not exist a loop longer than 50
+## for n=50,nreps=10000
+
+u<-dloop(50,10000)
+prob<-1 - sum(u[51:100])
+
+## Plotting the probability that there exists a loop of lentgh L=1,...,100
+
+## Plot title
+title=c('Probability that there exists at least one loop of length L') 
+
+plot(u,pch = 19,col = 'darkgreen', main = title,xlab='L',ylab='probability')
+
+
+
+## ----------------------------------------------------------------------------
+
+end_time <- Sys.time()
+runtime <- end_time - start_time
+ 
+## ----------------------------------------------------------------------------
+
+
