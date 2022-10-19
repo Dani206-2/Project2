@@ -30,27 +30,8 @@
 ## Output: True if the prisoners finds his number for the given inputs, False
 ## otherwise.
 
-## ----------------------------------------------------------------------------
+## We will use the Sys.time() command to measure the runtime of the entire code
 
-##  droop function aims to estimate, by simulation, the probability of each loop 
-##  length from 1 to 2n occurring at least once in a random shuffling of cards 
-##  to boxes.
-##  Vector v.sim aims to store the frequency about each loop length from 1 to 2n
-##  occurring at least once after replicating simulations 10000 times. 
-##  We assume all cards that are not opened, and record it when card has been 
-##  opened. In that case we could only test cards not opened and it will save 
-##  lots of time. 
-##  We value elements, index corresponding to the length of loop, in 
-##  vector v.sim 1 if the length of loop occurred at least once, otherwise 0. 
-##  For next simulation we just add new v.sim vector to previous one.
-##  We get probability vector through dividing the v.sim by nreps.
-
-##  Inputs:  n: the number of prisoners nreps:the number of replicate simulations
-##  Output:  , the probability of each loop length from 1 to 2n occurring at 
-##  least once in a random shuffling of cards to boxes.
-
-##  We will use the Sys.time() command to measure the runtime of the entire code
- 
 start_time <- Sys.time()
 
 
@@ -176,6 +157,7 @@ Pall<-function(n,nreps=10000,...){
 ## Probability of success for prisoner 1, for n=5, under strategy=1,2,3
 
 r_ind5=c()
+
 for(i in 1:3){
    
       r_ind5<-c(r_ind5,Pone(n=5,k=1,strategy=i))
@@ -217,6 +199,15 @@ for(i in 1:3){
 
 ## ----------------------------------------------------------------------------
 
+## results : r_ind5 = 0.4959 0.4028 0.4943, r_ind50 = 0.4955 0.3808 0.4947
+## r_all5 = 0.3598 0.0001 0.0013, r_all50 = 0.3127 0.0000 0.0000
+## These results are very surprising. To understand what is going on, assume 
+## random guessing (strategy 3) as a baseline strategy and see how we can 
+## improve on that.
+
+
+
+## ----------------------------------------------------------------------------
 
 dloop<-function(n,nreps){
   
@@ -276,7 +267,7 @@ prob<-1 - sum(u[51:100])
 ## Plot title
 title=c('Probability that there exists at least one loop of length L') 
 
-plot(u,pch = 19,col = 'darkgreen', main = title,xlab='L',ylab='probability')
+barplot(u,pch = 19,col = 'darkgreen', main = title,xlab='L',ylab='probability')
 
 
 
