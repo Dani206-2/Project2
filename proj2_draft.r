@@ -213,6 +213,9 @@ for(i in 1:3){
 
 ## results : r_ind5 = 0.4959 0.4028 0.4943, r_ind50 = 0.4955 0.3808 0.4947
 ## r_all5 = 0.3598 0.0001 0.0013, r_all50 = 0.3127 0.0000 0.0000
+
+## ----------------------------------------------------------------------------
+
 ## We observe that for the individual cases stretagies 1,3 give better results
 ## than strategy 2, which matches our theoretical expectations. To understand
 ## why that is consider the fact that for strategy=1,3 the theoretical 
