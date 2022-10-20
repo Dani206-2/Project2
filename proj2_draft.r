@@ -10,9 +10,9 @@
 ## through, along with the corresponding card numbers.
  
 
-## Inputs: n: the number of prisoners, k: the prison number 
-## strategy: 3 strategies to choose, nreps.nreps: number of simulations, the 
-## default value is set to 10,000.
+## Inputs: n: the number of prisoners divided by 2, k: the prison number through 
+## "..." notation, strategy: 3 strategies to choose, through "..." notation
+## nreps: number of simulations, the default value is set to 10,000.
 
 ## Output: probability of success for the chosen strategy for an individual
 ## prisoner.
@@ -23,18 +23,22 @@
 ## ----------------------------------------------------------------------------
 
 ## The function Psub, aims to minimize the overlap between the function Pone
-## and  the function Pall, which is defined later on.
+## and the function Pall, which is defined later on.
+
 ## Inputs: n,k,strategy and a 2n-vector cardseq representing the sequence of
 ## cards in the corresponding boxes, i.e cardseq[k] is the number of the card
-## contained in the box k.
-## Output: True if the prisoners finds his number for the given inputs, False
-## otherwise.
+## contained in the box k 
+
+## Output: True if the prisoners finds his number for the given inputs 
+## successfully, False otherwise.
+
 
 ## We will use the Sys.time() command to measure the runtime of the entire code
 
 start_time <- Sys.time()
 
-
+## Control the randomness
+set.seed(0)
 
 Psub<-function(n,k,strategy,cardseq){
   succeed=FALSE ## Assume the prisoner fails
@@ -46,33 +50,35 @@ Psub<-function(n,k,strategy,cardseq){
     
     if(strategy==1){ ## For strategy 1, pick box k
       
-      opencard<-cardseq[k] ## The first card to be read
+      card<-cardseq[k] ## The first card to be read
       
     } else { ## For strategy 2, random initial choice
       
-      boxopen<-sample(seq(1,2*n,1),1) ## The box that the prisoner opens 
-      opencard<-cardseq[boxopen] ## The card number in that box
+      boxopen<-sample(seq(1,2*n),1) ## The box that the prisoner opens 
+      card<-cardseq[boxopen] ## The card number in that box
     }
     
     
     i<-1 ## Set the number of boxes opened to be 1
     
     ## If the card is not found and boxes opened is less than n
-    while (opencard!=k & i<n){
+    while (card!=k & i<n){
+      
       ## Update the card read by using the previous card number to find
       ## the corresponding box number
-      opencard<-cardseq[opencard] 
+      card<-cardseq[card] 
       i<-i+1 ## Increase the count by 1
     }
     
-    ## If the prisoner finds the card, then succeed!
-    if(opencard==k){
+    ## If the prisoner finds the card before opening n cards, then succeed!
+    if(card==k){
       succeed=TRUE
     }
   }
   
   if (strategy==3){## For strategy 3, random guessing 
-    openseq<-sample(seq(1,2*n,1),n) ## Create a sequence of boxes to be opened
+    
+    openseq<-sample(seq(1,2*n),n) ## Create a sequence of boxes to be opened
     
     ## If the prisoner number is in one of the n boxes, it counts as success
     if (k %in% cardseq[openseq]){
@@ -80,7 +86,7 @@ Psub<-function(n,k,strategy,cardseq){
       
     }
   }
-  succeed
+  succeed ## Output: either TRUE or FALSE
 }
 
 ## ----------------------------------------------------------------------------
@@ -90,15 +96,16 @@ Pone<-function (n,nreps=10000,...){
   success<-0
   
   
-  ## Repeating the simulation for nreps.nreps times
+  ## Repeating the simulation for nreps times
   for (i in 1:nreps){
     cardseq<-c() ## Generate an empty vector for cardseq
-    cardseq<- sample(seq(1,2*n,1),2*n) ## Randomly allocate card no. to boxes
+    cardseq<- sample(seq(1,2*n),2*n) ## Randomly allocate cards to boxes
     
-    result<-Psub(n=n,cardseq=cardseq,...)
+    ## We use the Psub function to run the simulation
+    result<-Psub(n=n,cardseq=cardseq,...) 
     
-    if (result){
-      success<-success+1
+    if (result){ ## Add 1 if Psub returns true, indicating success
+      success<-success+1 
     }
   }
   success/nreps ## Output:the probability of success
@@ -110,8 +117,8 @@ Pone<-function (n,nreps=10000,...){
 ## The function Pall aims to calculate the probability of success for all the
 ## prisoners, i.e. the probability that every single prisoner finds their 
 ## number, under a given strategy.
-## Inputs: n: number of prisoners, nreps: number of simulations(default=10k)
-## ++possible comment about '...' notation
+## Inputs: n, nreps (same meaning as above)
+## plus strategy through '...' notation
 ## Output: Probability that all the prisoners find their number for the given
 ## inputs.  
 
@@ -120,12 +127,11 @@ Pone<-function (n,nreps=10000,...){
 Pall<-function(n,nreps=10000,...){
   ## We set the number of successes to 0
   success<-0
-  prisseq<-seq(1,2*n) ## An ascending sequence of all prisoners' number
   
   ## Repeating the simulation for nreps times
   for (i in 1:nreps){
     cardseq<-c() ## Generate an empty vector for cardseq
-    cardseq<- sample(prisseq,2*n) ## Randomly allocate card no. to boxes
+    cardseq<- sample(seq(1,2*n),2*n) ## Randomly allocate card no. to boxes
     
     for (k in 1:(2*n)){ ## Test all prisoners from k=1 to 2n
       result<-Psub(n=n,k=k,cardseq=cardseq,...)
@@ -199,8 +205,8 @@ for(i in 1:3){
 
 ## ----------------------------------------------------------------------------
 
-## results : r_ind5 = 0.4959 0.4028 0.4943, r_ind50 = 0.4955 0.3808 0.4947
-## r_all5 = 0.3598 0.0001 0.0013, r_all50 = 0.3127 0.0000 0.0000
+## results : r_ind5 = 0.4992 0.3896 0.4972, r_ind50 = 0.4914 0.3737 0.4950
+## r_all5 = 0.3563 0.0001 0.0010, r_all50 = 0.3161 0.0000 0.0000
 ## We see that for the individual cases strategies 1 and 3 give better 
 ## than strategy 2.
 
@@ -208,49 +214,63 @@ for(i in 1:3){
 
 ## ----------------------------------------------------------------------------
 
+##  The function dloop aims to estimate, by simulation, the probability of each 
+##  loop length from 1 to 2n occurring at least once in a random shuffling of 
+##  cards to boxes.
+
+##  Inputs: n, nreps (same meaning as above)
+
+##  Output: The probability of each loop length from 1 to 2n occurring at 
+##  least once in a random shuffling of cards to boxes.
+
+
+
 dloop<-function(n,nreps){
   
   
+  v<-rep(0,2*n) ## Create an empty vector for total occurance for each loop len 
   
-  v<-rep(0,2*n) ## empty vector 
-  
+  ## Repeating the simulation for nreps times
   for (i in 1:nreps){
     cardseq<-c() 
-    cardseq<- sample(seq(1,2*n),2*n) ### Randomly allocate card no. to boxes
-    v.sim<-rep(0,2*n)
+    cardseq<- sample(seq(1,2*n),2*n) ## Randomly allocate card to boxes
+    v.sim<-rep(0,2*n) ### vector used to find whether a loop length has occured 
     
-    opencard.seq<-rep(0,times=2*n) ### assume all card are not opened
-    for (k in 1:(2*n)){
-      if(opencard.seq[k]==0){  ### Only test cards that are NOT opened
-        ## Cards opened will have the same loop length
-        ## with one of the previous cards
-        loop.len<-1
-        opencard<-cardseq[k] ### The first card to be opened
+    opencard.seq<-rep(0,2*n) ## assume all card are not opened
+    for (k in 1:(2*n)){ ## Test prison number from 1 to 2k
+      
+      ## Only test cards that are NOT opened
+      ## Cards opened will have the same loop length
+      ## with one of the previous cards
+      
+      if(opencard.seq[k]==0){  
         
-        while (opencard!=k){
+        loop.len<-1
+        card<-cardseq[k] ## The first card to be opened
+        
+        while (card!=k){
           ## Update the card opened by using the previous card number to find
           ## the corresponding box number
-          opencard<-cardseq[opencard]
+          card<-cardseq[card]
           
           ## Record which card has been opened
-          opencard.seq[opencard]<-1
+          opencard.seq[card]<-1
           
           loop.len<-loop.len+1 ## Increase the loop by 1
         }
-        v.sim[loop.len]<-1
+        v.sim[loop.len]<-1 ## Enter 1 for the loop length occured
       } 
     }
     
     
     
-    ## Enter the loop length in the ith element of the vector
-    
+    ## Update the frequency in vector v by adding v.sim
     v<-v+v.sim
     
   }
   
   
-  v/nreps
+  v/nreps ## Output: Vector with length 2n
 }
 
 ## ----------------------------------------------------------------------------
@@ -264,9 +284,11 @@ prob<-1 - sum(u[51:100])
 ## Plotting the probability that there exists a loop of lentgh L=1,...,100
 
 ## Plot title
-title=c('Probability that there exists at least one loop of length L') 
+title=c('Probability that there exists at least one loop up to length 100') 
 
-barplot(u,pch = 19,col = 'darkgreen', main = title,xlab='L',ylab='probability')
+
+plot(seq(1,100,1),u, main = title,xlab='Loop length',ylab='Probability',
+         type='l')
 
 
 
