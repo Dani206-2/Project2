@@ -214,7 +214,7 @@ for(i in 1:3){
 
 ## ----------------------------------------------------------------------------
 
-## We observe that for the individual cases stretagies 1,3 give better results
+## We observe that for the individual cases strategies 1,3 give better results
 ## than strategy 2, which matches our theoretical expectations. To understand
 ## why that is consider the fact that for strategy=1,3 the theoretical 
 ## probability is 1/2 while for strategy 2 the prisoner can choose a loop that 
@@ -315,7 +315,7 @@ title=c('Probability that there exists at least one loop up to length 100')
 
 
 plot(seq(1,100,1),u, main = title,xlab='Loop length',ylab='Probability',
-         type='l')
+         pch=19)
 
  
 ## ----------------------------------------------------------------------------
