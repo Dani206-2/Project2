@@ -227,9 +227,9 @@ for(i in 1:3){
 ## are independent, because of the random choice of boxes, which makes the 
 ## combined probability fall off to zero really fast as the number of prisoners
 ## increases. For strategy 1, we get a very high probabilty compared to the 
-## other strategies, because the  individual probabilities of success are no
-## longer independent, because we have to take in to account the underlying 
-## permutation of boxes. This means that, if for example prisoner 1 finds their
+## other strategies, because the individual probabilities of success are no
+## longer independent. We have to take in to account the underlying 
+## permutation of boxes, if for example prisoner 1 finds their
 ## number then every other prisoner whose number lies on the same loop is also
 ## going to succeed in finding their number, so the individual successes are 
 ## not independent. 
