@@ -1,6 +1,12 @@
 ## Group34:Vangelis Antypas: s2449453, Jihan Li: s2322347, Daniel Kwok: s2308472
 ## Github repository address: 'https://github.com/Dani206-2/Project2'
-## Contribution: To be completed
+## Contribution: Daniel created the github repository and invited Vangelis and 
+## Jihan. Q1: Daniel+Jihan, Q2: Daniel, Q5: Daniel+Jihan, Q3,Q4,Q6: Vangelis
+## For the sake of keeping a record, we have reported who worked on
+## every question. However the submissions are not a product of individual work 
+## because we worked by getting together and talking about the questions and 
+## this just cannot be tracked. As far as we are concerned the distribution of 
+## work was as uniform as possible.
 
 ## ----------------------------------------------------------------------------
 
@@ -205,10 +211,27 @@ for(i in 1:3){
 
 ## ----------------------------------------------------------------------------
 
-## results : r_ind5 = 0.4992 0.3896 0.4972, r_ind50 = 0.4914 0.3737 0.4950
-## r_all5 = 0.3563 0.0001 0.0010, r_all50 = 0.3161 0.0000 0.0000
-## We see that for the individual cases strategies 1 and 3 give better 
-## than strategy 2.
+## results : r_ind5 = 0.4959 0.4028 0.4943, r_ind50 = 0.4955 0.3808 0.4947
+## r_all5 = 0.3598 0.0001 0.0013, r_all50 = 0.3127 0.0000 0.0000
+## We observe that for the individual cases stretagies 1,3 give better results
+## than strategy 2, which matches our theoretical expectations. To understand
+## why that is consider the fact that for strategy=1,3 the theoretical 
+## probability is 1/2 while for strategy 2 the prisoner can choose a loop that 
+## does not contain their number, so in that case they are stuck, which is why
+## intuitively the probability for strategy 2 is <1/2. The really surprising 
+## result comes when we consider the probability of success for all the 
+## prisoners combined. For strategies 2,3 the probabilities of every prisoner
+## are independent, because of the random choice of boxes, which makes the 
+## combined probability fall off to zero really fast as the number of prisoners
+## increases. For strategy 1, we get a very high probabilty compared to the 
+## other strategies, because the  individual probabilities of success are no
+## longer independent, because we have to take in to account the underlying 
+## permutation of boxes. This means that, if for example prisoner 1 finds their
+## number then every other prisoner whose number lies on the same loop is also
+## going to succeed in finding their number, so the individual successes are 
+## not independent. 
+## References (for theoretical results): 
+## 'https://en.wikipedia.org/wiki/100_prisoners_problem'.
 
 
 
@@ -280,6 +303,7 @@ dloop<-function(n,nreps){
 
 u<-dloop(50,10000)
 prob<-1 - sum(u[51:100])
+## prob is really close to the theoretical probability for strat 1, n=100
 
 ## Plotting the probability that there exists a loop of lentgh L=1,...,100
 
