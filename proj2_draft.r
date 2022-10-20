@@ -201,9 +201,8 @@ for(i in 1:3){
 
 ## results : r_ind5 = 0.4959 0.4028 0.4943, r_ind50 = 0.4955 0.3808 0.4947
 ## r_all5 = 0.3598 0.0001 0.0013, r_all50 = 0.3127 0.0000 0.0000
-## These results are very surprising. To understand what is going on, assume 
-## random guessing (strategy 3) as a baseline strategy and see how we can 
-## improve on that.
+## We see that for the individual cases strategies 1 and 3 give better 
+## than strategy 2.
 
 
 
